@@ -16,12 +16,12 @@ public class PlantController {
 
     public PlantRepository plantRepository;
 
-    @GetMapping("/plants")
+    @GetMapping("/api/plants")
     public List<Plant> getPlants(){
         return plantRepository.findAll();
     }
 
-    @PostMapping("/plant")
+    @PostMapping("/api/plant")
     public void addPlant(@RequestBody Plant plant){
         plantRepository.save(plant);
     }

@@ -16,12 +16,12 @@ public class GardenController {
 
     public GardenRepository gardenRepository;
 
-    @GetMapping("/gardens")
+    @GetMapping("/api/gardens")
     public List<Garden> getGardens(){
         return gardenRepository.findAll();
     }
 
-    @PostMapping("/garden")
+    @PostMapping("/api/garden")
     public void addGarden(@RequestBody Garden garden){
         gardenRepository.save(garden);
     }
