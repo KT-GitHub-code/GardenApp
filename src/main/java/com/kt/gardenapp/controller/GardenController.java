@@ -1,14 +1,14 @@
 package com.kt.gardenapp.controller;
 
 import com.kt.gardenapp.model.Garden;
+import com.kt.gardenapp.model.Plant;
 import com.kt.gardenapp.repository.GardenRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -19,6 +19,21 @@ public class GardenController {
     @GetMapping("/api/gardens")
     public List<Garden> getGardens(){
         return gardenRepository.findAll();
+    }
+
+    @GetMapping("/api/gardens/{id}")
+    public Optional<Garden> getGardenById(@PathVariable String id){
+        return gardenRepository.findById(Long.valueOf(id));
+    }
+
+    @GetMapping("/api/plantsbygardenid/{id}")
+    public Set<Plant> getPlantsByGardenId(@PathVariable String id){
+        Optional<Garden> garden = gardenRepository.findById(Long.valueOf(id));
+        Set<Plant> plants = null;
+        if(garden.isPresent()){
+            plants = garden.get().getPlants();
+        }
+        return plants;
     }
 
     @PostMapping("/api/garden")
