@@ -1,0 +1,8 @@
+stages:
+  - test
+  - build
+  - deploy
+
+run_tests:
+  script:
+   echo "test stage"
