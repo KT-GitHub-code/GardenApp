@@ -12,6 +12,7 @@
     <artifactId>GardenApp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>GardenApp</name>
+    <packaging>pom</packaging>
     <description>GardenApp</description>
     <properties>
         <java.version>18</java.version>
