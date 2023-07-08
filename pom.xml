@@ -12,7 +12,7 @@
     <artifactId>GardenApp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>GardenApp</name>
-    <packaging>pom</packaging>
+<!--    <packaging>pom</packaging>-->
     <description>GardenApp</description>
     <properties>
         <java.version>18</java.version>
@@ -55,13 +55,19 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-
-                        </exclude>
-                    </excludes>
-                </configuration>
+<!--                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                com.kt.gardenapp.GardenAppApplication
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>-->
             </plugin>
         </plugins>
     </build>
