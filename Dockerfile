@@ -1,7 +1,7 @@
 #
 # Build stage
 #
-FROM maven:3.6.3-openjdk-17 AS build
+FROM maven:3.8-openjdk-18 AS build
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn -f pom.xml clean package
