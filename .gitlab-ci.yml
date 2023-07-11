@@ -1,5 +1,5 @@
 variables:
-  IMAGE_NAME: ktdhc/garden-app-gitlab
+  IMAGE_NAME: ktdhc/demos
   IMAGE_TAG: garden-app-gitlab-1.0
 
 
