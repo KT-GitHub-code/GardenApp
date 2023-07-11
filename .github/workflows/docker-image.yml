@@ -13,10 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build and Push Docker Image
-        uses: mr-smithers-excellent/docker-build-push@v4
-        with:
-          image: ktdhc/demos
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        docker build . --file Dockerfile --tag ktdhc/garden-app-github-actions:garden-app-github-actions-1.0
+        docker push ktdhc/demos:garden-app-github-actions-1.0
