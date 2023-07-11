@@ -39,5 +39,5 @@ jobs:
     - name: Build the Docker image
       run: |
         docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-        docker build . --file Dockerfile --tag ktdhc/garden-app-github-actions:garden-app-github-actions-1.0
+        docker build . --file Dockerfile --tag ktdhc/demos:garden-app-github-actions-1.0
         docker push ktdhc/demos:garden-app-github-actions-1.0
