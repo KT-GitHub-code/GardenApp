@@ -16,6 +16,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        docker login -u $DOCKERHUB_USER --password-stdin $DOCKERHUB_PASSWORD
+        docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
         docker build . --file Dockerfile --tag ktdhc/garden-app-github-actions:garden-app-github-actions-1.0
         docker push ktdhc/demos:garden-app-github-actions-1.0
