@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                mvn -B package --file pom.xml
+                sh 'mvn -B package --file pom.xml'
             }
         }
         stage('Test') {
