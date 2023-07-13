@@ -1,13 +1,13 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.3-eclipse-temurin-11'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
+    agent none
 
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.9.3-eclipse-temurin-11'
+                }
+            }
             steps {
                 echo 'Building..'
                 sh 'mvn -B package --file pom.xml'
