@@ -1,0 +1,24 @@
+services:
+
+  database:
+    ports:
+      - 15432:5432
+    container_name: postgresql_container
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+    container_name: gardenapp_container
+    ports:
+      - 9000:9000
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/postgres
+    depends_on:
+      - database
+
