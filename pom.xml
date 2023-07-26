@@ -16,6 +16,7 @@
     <description>GardenApp</description>
     <properties>
         <java.version>11</java.version>
+        <start-class>com.kt.gardenapp.GardenAppApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
