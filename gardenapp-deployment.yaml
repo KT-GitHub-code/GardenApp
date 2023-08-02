@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gardenapp
+  labels:
+    app: gardenapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gardenapp
+  template:
+    metadata:
+      labels:
+        app: gardenapp
+    spec:
+      containers:
+        - name: gardenapp
+          image: gardenapp
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9000
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gardenapp
+spec:
+  selector:
+    app: gardenapp
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: 30000
