@@ -1,7 +1,6 @@
 package com.kt.gardenapp.controller;
 
 import com.kt.gardenapp.model.Plant;
-import com.kt.gardenapp.repository.PlantRepository;
 import com.kt.gardenapp.service.PlantService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
