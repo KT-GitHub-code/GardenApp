@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "garden")
 public class Garden {
 
     @Id
@@ -15,7 +16,7 @@ public class Garden {
 
     @OneToMany(mappedBy = "garden", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonIgnore
-    public Set<Plant> plants;
+    private Set<Plant> plants;
 
 
     public Garden(Long id, Set<Plant> plants) {

@@ -3,6 +3,7 @@ package com.kt.gardenapp.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "plant")
 public class Plant {
 
     @Id
@@ -10,10 +11,10 @@ public class Plant {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    public PlantType type;
+    private PlantType type;
 
     @ManyToOne
-    public Garden garden;
+    private Garden garden;
 
 
     public Plant(Long id, PlantType type, Garden garden) {
