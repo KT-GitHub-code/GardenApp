@@ -5,6 +5,7 @@ import com.kt.gardenapp.repository.PlantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlantService {
@@ -17,6 +18,10 @@ public class PlantService {
 
     public List<Plant> findAll() {
         return plantRepository.findAll();
+    }
+
+    public Optional<Plant> find(Long id){
+        return plantRepository.findById(id);
     }
 
     public void save(Plant plant) {
