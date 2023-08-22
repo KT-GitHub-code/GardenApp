@@ -72,7 +72,6 @@ public class GardenController {
     @PostMapping("/api/garden")
     public void addGarden(@RequestBody GardenDTO gardenDTO) {
         Garden garden = new Garden();
-        BeanUtils.copyProperties(gardenDTO, new Garden());
         gardenService.save(garden);
     }
 
