@@ -15,7 +15,7 @@
 <!--    <packaging>pom</packaging>-->
     <description>GardenApp</description>
     <properties>
-        <java.version>18</java.version>
+        <java.version>17</java.version>
         <start-class>com.kt.gardenapp.GardenAppApplication</start-class>
     </properties>
     <dependencies>
