@@ -1,7 +1,7 @@
 package com.kt.gardenapp.security.config;
 
-import com.kt.gardenapp.model.Role;
-import com.kt.gardenapp.repository.RoleRepository;
+import com.kt.gardenapp.security.role.Role;
+import com.kt.gardenapp.security.role.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

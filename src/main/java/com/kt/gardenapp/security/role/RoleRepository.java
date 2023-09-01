@@ -1,6 +1,5 @@
-package com.kt.gardenapp.repository;
+package com.kt.gardenapp.security.role;
 
-import com.kt.gardenapp.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

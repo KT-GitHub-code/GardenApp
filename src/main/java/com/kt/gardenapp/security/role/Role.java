@@ -1,8 +1,8 @@
-package com.kt.gardenapp.model;
+package com.kt.gardenapp.security.role;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 @Entity
 public class Role {
