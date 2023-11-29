@@ -1,102 +1,130 @@
 package com.kt.gardenapp.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.kt.gardenapp.model.Garden;
 import com.kt.gardenapp.model.Plant;
 import com.kt.gardenapp.model.PlantType;
 import com.kt.gardenapp.repository.PlantRepository;
-
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
-
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {PlantService.class})
-@ExtendWith(SpringExtension.class)
-class PlantServiceTest {
-    @MockBean
+@SpringBootTest
+public class PlantServiceTest {
+
+    @Mock
     private PlantRepository plantRepository;
 
-    @Autowired
-    private PlantService plantService;
-
-    /**
-     * Method under test: {@link PlantService#findAll()}
-     */
+    // findAll method returns a list of all plants
     @Test
-    void testFindAll() {
-        ArrayList<Plant> plantList = new ArrayList<>();
-        when(plantRepository.findAll()).thenReturn(plantList);
-        List<Plant> actualFindAllResult = plantService.findAll();
-        assertSame(plantList, actualFindAllResult);
-        assertTrue(actualFindAllResult.isEmpty());
-        verify(plantRepository).findAll();
+    public void test_findAll_returnsListOfAllPlants() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
+
+        List<Plant> expectedPlants = new ArrayList<>();
+        expectedPlants.add(new Plant(1L, PlantType.ALOE, new Garden()));
+        expectedPlants.add(new Plant(2L, PlantType.AGAVE, new Garden()));
+        expectedPlants.add(new Plant(3L, PlantType.AEONIUM, new Garden()));
+
+        when(plantRepository.findAll()).thenReturn(expectedPlants);
+
+        // Act
+        List<Plant> actualPlants = plantService.findAll();
+
+        // Assert
+        assertEquals(expectedPlants, actualPlants);
     }
 
-    /**
-     * Method under test: {@link PlantService#find(Long)}
-     */
+    // find method returns an optional containing the plant with the given id
     @Test
-    void testFind() {
-        Garden garden = new Garden();
-        garden.setId(1L);
-        garden.setPlants(new HashSet<>());
+    public void test_find_returnsOptionalContainingPlantWithGivenId() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
 
-        Plant plant = new Plant();
-        plant.setGarden(garden);
-        plant.setId(1L);
-        plant.setType(PlantType.AEONIUM);
-        Optional<Plant> ofResult = Optional.of(plant);
-        when(plantRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-        Optional<Plant> actualFindResult = plantService.find(1L);
-        assertSame(ofResult, actualFindResult);
-        assertTrue(actualFindResult.isPresent());
-        verify(plantRepository).findById(Mockito.<Long>any());
+        Long id = 1L;
+        Plant expectedPlant = new Plant(id, PlantType.ALOE, new Garden());
+
+        when(plantRepository.findById(id)).thenReturn(Optional.of(expectedPlant));
+
+        // Act
+        Optional<Plant> actualPlant = plantService.find(id);
+
+        // Assert
+        assertTrue(actualPlant.isPresent());
+        assertEquals(expectedPlant, actualPlant.get());
     }
 
-    /**
-     * Method under test: {@link PlantService#save(Plant)}
-     */
+    // save method saves a new plant to the repository
     @Test
-    void testSave() {
-        Garden garden = new Garden();
-        garden.setId(1L);
-        garden.setPlants(new HashSet<>());
+    public void test_save_savesNewPlantToRepository() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
 
-        Plant plant = new Plant();
-        plant.setGarden(garden);
-        plant.setId(1L);
-        plant.setType(PlantType.AEONIUM);
-        when(plantRepository.save(Mockito.<Plant>any())).thenReturn(plant);
+        Plant plant = new Plant(1L, PlantType.ALOE, new Garden());
 
-        Garden garden2 = new Garden();
-        garden2.setId(1L);
-        garden2.setPlants(new HashSet<>());
+        // Act
+        plantService.save(plant);
 
-        Plant plant2 = new Plant();
-        plant2.setGarden(garden2);
-        plant2.setId(1L);
-        plant2.setType(PlantType.AEONIUM);
-        plantService.save(plant2);
-        verify(plantRepository).save(Mockito.<Plant>any());
-        assertSame(garden2, plant2.getGarden());
-        assertEquals(PlantType.AEONIUM, plant2.getType());
-        assertEquals(1L, plant2.getId().longValue());
-        assertTrue(plantService.findAll().isEmpty());
+        // Assert
+        verify(plantRepository).save(plant);
     }
+
+    // find method returns an empty optional when given an id that does not exist
+    @Test
+    public void test_find_returnsEmptyOptionalWhenGivenNonexistentId() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
+
+        Long id = 1L;
+
+        when(plantRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Plant> actualPlant = plantService.find(id);
+
+        // Assert
+        assertFalse(actualPlant.isPresent());
+    }
+
+    // save method updates an existing plant in the repository
+    @Test
+    public void test_save_updatesExistingPlantInRepository() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
+
+        Plant plant = new Plant(1L, PlantType.ALOE, new Garden());
+
+        when(plantRepository.save(plant)).thenReturn(plant);
+
+        // Act
+        plantService.save(plant);
+
+        // Assert
+        verify(plantRepository).save(plant);
+    }
+
+    // findAll method returns an empty list when there are no plants in the repository
+    @Test
+    public void test_findAll_returnsEmptyListWhenNoPlantsInRepository() {
+        // Arrange
+        PlantService plantService = new PlantService(plantRepository);
+
+        List<Plant> expectedPlants = new ArrayList<>();
+
+        when(plantRepository.findAll()).thenReturn(expectedPlants);
+
+        // Act
+        List<Plant> actualPlants = plantService.findAll();
+
+        // Assert
+        assertEquals(expectedPlants, actualPlants);
+    }
+
 }
-
