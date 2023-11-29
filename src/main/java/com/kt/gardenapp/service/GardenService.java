@@ -25,6 +25,8 @@ public class GardenService {
     }
 
     public void save(Garden garden) {
-        gardenRepository.save(garden);
+        if (garden != null){
+            gardenRepository.save(garden);
+        }
     }
 }

@@ -1,83 +1,114 @@
 package com.kt.gardenapp.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.kt.gardenapp.model.Garden;
 import com.kt.gardenapp.repository.GardenRepository;
-
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {GardenService.class})
-@ExtendWith(SpringExtension.class)
-class GardenServiceTest {
-    @MockBean
+@SpringBootTest
+public class GardenServiceTest {
+
+    @Mock
     private GardenRepository gardenRepository;
 
-    @Autowired
-    private GardenService gardenService;
-
-    /**
-     * Method under test: {@link GardenService#findAll()}
-     */
     @Test
-    void testFindAll() {
-        ArrayList<Garden> gardenList = new ArrayList<>();
-        when(gardenRepository.findAll()).thenReturn(gardenList);
-        List<Garden> actualFindAllResult = gardenService.findAll();
-        assertSame(gardenList, actualFindAllResult);
-        assertTrue(actualFindAllResult.isEmpty());
-        verify(gardenRepository).findAll();
+    public void test_retrieve_all_gardens() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
+
+        List<Garden> expectedGardens = new ArrayList<>();
+        expectedGardens.add(new Garden(1L, new HashSet<>()));
+        expectedGardens.add(new Garden(2L, new HashSet<>()));
+
+        when(gardenRepository.findAll()).thenReturn(expectedGardens);
+
+        // Act
+        List<Garden> actualGardens = gardenService.findAll();
+
+        // Assert
+        assertEquals(expectedGardens, actualGardens);
     }
 
-    /**
-     * Method under test: {@link GardenService#findById(String)}
-     */
     @Test
-    void testFindById() {
-        Garden garden = new Garden();
-        garden.setId(1L);
-        garden.setPlants(new HashSet<>());
-        Optional<Garden> ofResult = Optional.of(garden);
-        when(gardenRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-        Optional<Garden> actualFindByIdResult = gardenService.findById("42");
-        assertSame(ofResult, actualFindByIdResult);
-        assertTrue(actualFindByIdResult.isPresent());
-        verify(gardenRepository).findById(Mockito.<Long>any());
+    public void test_retrieve_garden_by_id() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
+
+        Garden expectedGarden = new Garden(1L, new HashSet<>());
+
+        when(gardenRepository.findById(1L)).thenReturn(Optional.of(expectedGarden));
+
+        // Act
+        Optional<Garden> actualGarden = gardenService.findById("1");
+
+        // Assert
+        assertEquals(Optional.of(expectedGarden), actualGarden);
     }
 
-    /**
-     * Method under test: {@link GardenService#save(Garden)}
-     */
     @Test
-    void testSave() {
-        Garden garden = new Garden();
-        garden.setId(1L);
-        garden.setPlants(new HashSet<>());
-        when(gardenRepository.save(Mockito.<Garden>any())).thenReturn(garden);
+    public void test_save_new_garden() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
 
-        Garden garden2 = new Garden();
-        garden2.setId(1L);
-        garden2.setPlants(new HashSet<>());
-        gardenService.save(garden2);
-        verify(gardenRepository).save(Mockito.<Garden>any());
-        assertEquals(1L, garden2.getId().longValue());
-        assertTrue(garden2.getPlants().isEmpty());
-        assertTrue(gardenService.findAll().isEmpty());
+        Garden gardenToSave = new Garden(1L, new HashSet<>());
+
+        // Act
+        gardenService.save(gardenToSave);
+
+        // Assert
+        verify(gardenRepository, times(1)).save(gardenToSave);
     }
+
+    @Test
+    public void test_handle_empty_list_of_gardens() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
+
+        List<Garden> expectedGardens = new ArrayList<>();
+
+        when(gardenRepository.findAll()).thenReturn(expectedGardens);
+
+        // Act
+        List<Garden> actualGardens = gardenService.findAll();
+
+        // Assert
+        assertEquals(expectedGardens, actualGardens);
+    }
+
+    @Test
+    public void test_handle_null_garden_returned_by_findById() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
+
+        when(gardenRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Garden> actualGarden = gardenService.findById("1");
+
+        // Assert
+        assertEquals(Optional.empty(), actualGarden);
+    }
+
+    @Test
+    public void test_handle_null_garden_passed_to_save() {
+        // Arrange
+        GardenService gardenService = new GardenService(gardenRepository);
+
+        Garden gardenToSave = null;
+
+        // Act
+        gardenService.save(gardenToSave);
+
+        // Assert
+        verify(gardenRepository, times(0)).save(gardenToSave);
+    }
+
 }
-
