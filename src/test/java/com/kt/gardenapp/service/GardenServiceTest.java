@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -104,11 +105,9 @@ public class GardenServiceTest {
 
         Garden gardenToSave = null;
 
-        // Act
-        gardenService.save(gardenToSave);
-
-        // Assert
-        verify(gardenRepository, times(0)).save(gardenToSave);
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> gardenService.save(gardenToSave));
+        assertEquals("Garden parameter cannot be null", exception.getMessage());
     }
 
 }

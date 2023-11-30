@@ -25,8 +25,9 @@ public class GardenService {
     }
 
     public void save(Garden garden) {
-        if (garden != null){
-            gardenRepository.save(garden);
+        if (garden == null) {
+            throw new IllegalArgumentException("Garden parameter cannot be null");
         }
+        gardenRepository.save(garden);
     }
 }
