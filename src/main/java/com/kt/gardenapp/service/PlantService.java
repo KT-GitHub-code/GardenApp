@@ -3,6 +3,7 @@ package com.kt.gardenapp.service;
 import com.kt.gardenapp.model.Plant;
 import com.kt.gardenapp.repository.PlantRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,11 @@ public class PlantService {
         return plantRepository.findById(id);
     }
 
-    public void save(Plant plant) {
+    @Transactional
+    public Plant save(Plant plant) {
         if (plant == null) {
             throw new IllegalArgumentException("Plant parameter cannot be null");
         }
-        plantRepository.save(plant);
+        return plantRepository.save(plant);
     }
 }

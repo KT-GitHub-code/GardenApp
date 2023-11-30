@@ -2,6 +2,7 @@ package com.kt.gardenapp.service;
 
 import com.kt.gardenapp.model.Garden;
 import com.kt.gardenapp.repository.GardenRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +25,11 @@ public class GardenService {
         return gardenRepository.findById(Long.valueOf(id));
     }
 
-    public void save(Garden garden) {
+    @Transactional
+    public Garden save(Garden garden) {
         if (garden == null) {
             throw new IllegalArgumentException("Garden parameter cannot be null");
         }
-        gardenRepository.save(garden);
+        return gardenRepository.save(garden);
     }
 }
