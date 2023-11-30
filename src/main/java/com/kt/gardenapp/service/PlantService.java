@@ -25,6 +25,9 @@ public class PlantService {
     }
 
     public void save(Plant plant) {
+        if (plant == null) {
+            throw new IllegalArgumentException("Plant parameter cannot be null");
+        }
         plantRepository.save(plant);
     }
 }
