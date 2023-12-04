@@ -4,6 +4,7 @@ import com.kt.gardenapp.model.Garden;
 import com.kt.gardenapp.model.Plant;
 import com.kt.gardenapp.model.PlantType;
 import com.kt.gardenapp.repository.PlantRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +23,17 @@ public class PlantServiceTest {
     @Mock
     private PlantRepository plantRepository;
 
+    private PlantService plantService;
+
+    @BeforeEach
+    void setUp() {
+        plantService = new PlantService(plantRepository);
+    }
+
     // findAll method returns a list of all plants
     @Test
     public void test_findAll_returnsListOfAllPlants() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         List<Plant> expectedPlants = new ArrayList<>();
         expectedPlants.add(new Plant(1L, PlantType.ALOE, new Garden()));
         expectedPlants.add(new Plant(2L, PlantType.AGAVE, new Garden()));
@@ -46,8 +52,6 @@ public class PlantServiceTest {
     @Test
     public void test_find_returnsOptionalContainingPlantWithGivenId() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         Long id = 1L;
         Plant expectedPlant = new Plant(id, PlantType.ALOE, new Garden());
 
@@ -65,8 +69,6 @@ public class PlantServiceTest {
     @Test
     public void test_save_savesNewPlantToRepository() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         Plant plant = new Plant(1L, PlantType.ALOE, new Garden());
 
         // Act
@@ -80,8 +82,6 @@ public class PlantServiceTest {
     @Test
     public void test_find_returnsEmptyOptionalWhenGivenNonexistentId() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         Long id = 1L;
 
         when(plantRepository.findById(id)).thenReturn(Optional.empty());
@@ -97,8 +97,6 @@ public class PlantServiceTest {
     @Test
     public void test_save_updatesExistingPlantInRepository() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         Plant plant = new Plant(1L, PlantType.ALOE, new Garden());
 
         when(plantRepository.save(plant)).thenReturn(plant);
@@ -114,8 +112,6 @@ public class PlantServiceTest {
     @Test
     public void test_findAll_returnsEmptyListWhenNoPlantsInRepository() {
         // Arrange
-        PlantService plantService = new PlantService(plantRepository);
-
         List<Plant> expectedPlants = new ArrayList<>();
 
         when(plantRepository.findAll()).thenReturn(expectedPlants);
