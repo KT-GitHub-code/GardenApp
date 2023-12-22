@@ -1,12 +1,12 @@
 package com.kt.gardenapp.controller;
 
+import com.kt.gardenapp.kafka.KafkaProducerService;
 import com.kt.gardenapp.model.DTOs.PlantDTO;
 import com.kt.gardenapp.model.Garden;
 import com.kt.gardenapp.model.Plant;
 import com.kt.gardenapp.service.DTOMappers.PlantDTOMapper;
 import com.kt.gardenapp.service.GardenService;
 import com.kt.gardenapp.service.PlantService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +19,14 @@ public class PlantController {
     public PlantService plantService;
     public PlantDTOMapper plantDTOMapper;
     public GardenService gardenService;
+    public KafkaProducerService kafkaProducerService;
 
 
-    public PlantController(PlantService plantService, PlantDTOMapper plantDTOMapper, GardenService gardenService) {
+    public PlantController(PlantService plantService, PlantDTOMapper plantDTOMapper, GardenService gardenService, KafkaProducerService kafkaProducerService) {
         this.plantService = plantService;
         this.plantDTOMapper = plantDTOMapper;
         this.gardenService = gardenService;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     @GetMapping("/api/plants")
@@ -49,6 +51,9 @@ public class PlantController {
             plant.setGarden(garden.get());
         }
         plantService.save(plant);
+
+        // Kafka message
+        kafkaProducerService.sendMessage(plantDTO);
     }
 
 }
